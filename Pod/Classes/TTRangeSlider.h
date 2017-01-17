@@ -7,6 +7,13 @@
 #import <UIKit/UIKit.h>
 #import "TTRangeSliderDelegate.h"
 
+/// Enumeration for min/max label alignment
+typedef NS_ENUM(NSInteger, LabelAlign) {
+    HandleLeftEdgeAlign,
+    HandleRightEdgeAlign,
+    HandleCenterAlign
+};
+
 IB_DESIGNABLE
 @interface TTRangeSlider : UIControl <UIGestureRecognizerDelegate>
 
@@ -44,6 +51,16 @@ IB_DESIGNABLE
  * Hides the labels above the slider controls. YES = labels will be hidden. NO = labels will be shown. Default is NO.
  */
 @property (nonatomic, assign) IBInspectable BOOL hideLabels;
+
+/**
+ * Sets min label alignment in relation to the handle. Default value is `LabelAlignCenter`.
+ */
+@property (nonatomic, assign) LabelAlign minLabelAlignment;
+
+/**
+ * Sets max label alignment in relation to the handle. Default value is `LabelAlignCenter`.
+ */
+@property (nonatomic, assign) LabelAlign maxLabelAlignment;
 
 /**
  * The color of the minimum value text label. If not set, the default is the tintColor.

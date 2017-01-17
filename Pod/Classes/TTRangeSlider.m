@@ -73,6 +73,9 @@ static const CGFloat kLabelsFontSize = 12.0f;
     
     _labelPadding = 8.0;
     
+    _minLabelAlignment = HandleCenterAlign;
+    _maxLabelAlignment = HandleCenterAlign;
+    
     //draw the slider line
     self.sliderLine = [CALayer layer];
     self.sliderLine.backgroundColor = self.tintColor.CGColor;
@@ -283,15 +286,47 @@ static const CGFloat kLabelsFontSize = 12.0f;
     //the centre points for the labels are X = the same x position as the relevant handle. Y = the y position of the handle minus half the height of the text label, minus some padding.
     float padding = self.labelPadding;
     float minSpacingBetweenLabels = 8.0f;
+    
+    CGPoint newMinLabelCenter;
+    CGPoint newMaxLabelCenter;
 
     CGPoint leftHandleCentre = [self getCentreOfRect:self.leftHandle.frame];
-    CGPoint newMinLabelCenter = CGPointMake(leftHandleCentre.x, self.leftHandle.frame.origin.y - (self.minLabel.frame.size.height/2) - padding);
-
     CGPoint rightHandleCentre = [self getCentreOfRect:self.rightHandle.frame];
-    CGPoint newMaxLabelCenter = CGPointMake(rightHandleCentre.x, self.rightHandle.frame.origin.y - (self.maxLabel.frame.size.height/2) - padding);
 
     CGSize minLabelTextSize = self.minLabelTextSize;
     CGSize maxLabelTextSize = self.maxLabelTextSize;
+    
+    /// get min label center according to allignment variable
+    switch (_minLabelAlignment) {
+        case HandleCenterAlign:
+            newMinLabelCenter = CGPointMake(leftHandleCentre.x, self.leftHandle.frame.origin.y - (self.minLabel.frame.size.height/2) - padding);
+            break;
+            
+        case HandleLeftEdgeAlign:
+            newMinLabelCenter = CGPointMake(self.leftHandle.frame.origin.x + minLabelTextSize.width/2, self.leftHandle.frame.origin.y - (self.minLabel.frame.size.height/2) - padding);
+            break;
+            
+        case HandleRightEdgeAlign:
+            
+            newMinLabelCenter = CGPointMake(self.leftHandle.frame.origin.x + self.leftHandle.frame.size.width - minLabelTextSize.width/2, self.leftHandle.frame.origin.y - (self.minLabel.frame.size.height/2) - padding);
+            break;
+    }
+    /// get max label center according to allignment variable
+    switch (_maxLabelAlignment) {
+        case HandleCenterAlign:
+            newMaxLabelCenter = CGPointMake(rightHandleCentre.x, self.rightHandle.frame.origin.y - (self.maxLabel.frame.size.height/2) - padding);
+            break;
+            
+        case HandleLeftEdgeAlign:
+            
+            newMaxLabelCenter = CGPointMake(self.rightHandle.frame.origin.x + maxLabelTextSize.width/2, self.rightHandle.frame.origin.y - (self.maxLabel.frame.size.height/2) - padding);
+            break;
+            
+        case HandleRightEdgeAlign:
+            
+            newMaxLabelCenter = CGPointMake(self.rightHandle.frame.origin.x + self.rightHandle.frame.size.width - maxLabelTextSize.width/2, self.rightHandle.frame.origin.y - (self.maxLabel.frame.size.height/2) - padding);
+            break;
+    }
     
     
     self.minLabel.frame = CGRectMake(0, 0, minLabelTextSize.width, minLabelTextSize.height);
