@@ -249,16 +249,20 @@ static const CGFloat kLabelsFontSize = 12.0f;
 }
 
 - (void)updateLabelValues {
-    if (self.hideLabels || [self.numberFormatterOverride isEqual:[NSNull null]]){
+    if (self.hideLabels
+        || ([self.minNumberFormatterOverride isEqual:[NSNull null]]
+            && [self.maxNumberFormatterOverride isEqual:[NSNull null]])){
         self.minLabel.string = @"";
         self.maxLabel.string = @"";
         return;
     }
 
-    NSNumberFormatter *formatter = (self.numberFormatterOverride != nil) ? self.numberFormatterOverride : self.decimalNumberFormatter;
+    NSNumberFormatter *minFormatter = (self.minNumberFormatterOverride != nil) ? self.minNumberFormatterOverride : self.decimalNumberFormatter;
+    
+    NSNumberFormatter *maxFormatter = (self.maxNumberFormatterOverride != nil) ? self.maxNumberFormatterOverride : self.decimalNumberFormatter;
 
-    self.minLabel.string = [formatter stringFromNumber:@(self.selectedMinimum)];
-    self.maxLabel.string = [formatter stringFromNumber:@(self.selectedMaximum)];
+    self.minLabel.string = [minFormatter stringFromNumber:@(self.selectedMinimum)];
+    self.maxLabel.string = [maxFormatter stringFromNumber:@(self.selectedMaximum)];
     
     self.minLabelTextSize = [self.minLabel.string sizeWithAttributes:@{NSFontAttributeName:self.minLabelFont}];
     self.maxLabelTextSize = [self.maxLabel.string sizeWithAttributes:@{NSFontAttributeName:self.maxLabelFont}];
@@ -618,8 +622,13 @@ static const CGFloat kLabelsFontSize = 12.0f;
     self.maxLabel.fontSize = _maxLabelFont.pointSize;
 }
 
--(void)setNumberFormatterOverride:(NSNumberFormatter *)numberFormatterOverride{
-    _numberFormatterOverride = numberFormatterOverride;
+-(void)setMinNumberFormatterOverride:(NSNumberFormatter *)minNumberFormatterOverride{
+    _minNumberFormatterOverride = minNumberFormatterOverride;
+    [self updateLabelValues];
+}
+
+-(void)setMaxNumberFormatterOverride:(NSNumberFormatter *)maxNumberFormatterOverride{
+    _maxNumberFormatterOverride = maxNumberFormatterOverride;
     [self updateLabelValues];
 }
 
